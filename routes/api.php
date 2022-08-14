@@ -17,3 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+//Route::get('comments', 'CommentsController@getAllComments');//7以前の書き方
+//Route::get('comments', [CommentsController::class, 'getAllComments']);//8以降の書き方
+
+
+Route::get('comments','App\Http\Controllers\CommentsController@getAllComments');
+

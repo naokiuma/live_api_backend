@@ -24,3 +24,4 @@ Route::get('/upload/image','App\Http\Controllers\ImageController@input');
 //画像ファイルアップロード先
 Route::post('/upload/image','App\Http\Controllers\ImageController@upload');
 
+
