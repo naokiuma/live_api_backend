@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,19 @@ Route::get('/', function () {
 });
 Route::get('sample/{id?}', 'App\Http\Controllers\SampleController@index');
 //Route::get('sample', 'SampleController@index');//この書き方じゃダメwになったよ
+
+//token発行ルート
+Route::get('test',function(){
+    $user = Auth::loginUsingId(1);
+    $token = $user->createToken('testです');//第二引数に配列で複数のabikities(パーミッション)を指定可能
+    //ここで作られたトークンはテーブルに保管される。
+    dd($token);
+});
+
+Route::middleware('auth:sanctum')->get('/user',function(Request $request){
+    return $request->user();
+});
+
 
 //画像ファイルアップロードボタン(仮)
 Route::get('/upload/image','App\Http\Controllers\ImageController@input');
