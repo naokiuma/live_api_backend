@@ -1,4 +1,12 @@
-GET http://localhost:8888/user/
+# GET http://localhost:8888/user/
+# Content-Type: application/json
+# Accept: application/json
+# Authorization: Bearer 2|hIism16PK6hcR6koYMDEtNXCK61930KW6EMYxG5Q
+
+POST http://localhost:8888/login
 Content-Type: application/json
-Accept: application/json
-Authorization: Bearer 2|hIism16PK6hcR6koYMDEtNXCK61930KW6EMYxG5Q
+
+{
+    "email": "john@example.com",
+    "password": "6533"
+}

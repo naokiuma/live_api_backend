@@ -33,6 +33,15 @@ Route::middleware('auth:sanctum')->get('/user',function(Request $request){
 });
 
 
+
+Route::post('login', 'App\Http\Controllers\Auth\LoginController@login');
+
+
+
+// Route::post('/login', [LoginController::class, 'login']);
+
+
+
 //画像ファイルアップロードボタン(仮)
 Route::get('/upload/image','App\Http\Controllers\ImageController@input');
 //画像ファイルアップロード先
