@@ -34,7 +34,8 @@ Route::middleware('auth:sanctum')->get('/user',function(Request $request){
 
 
 
-Route::post('login', 'App\Http\Controllers\Auth\LoginController@login');
+Route::post('/login', 'App\Http\Controllers\Auth\LoginController@login');
+
 
 
 
@@ -48,3 +49,7 @@ Route::get('/upload/image','App\Http\Controllers\ImageController@input');
 Route::post('/upload/image','App\Http\Controllers\ImageController@upload');
 
 
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
