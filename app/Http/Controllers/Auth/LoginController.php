@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 
 class LoginController extends Controller
 {
@@ -44,6 +46,7 @@ class LoginController extends Controller
 
     public function login(Request $request): JsonResponse
     {
+
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => 'required',
@@ -51,9 +54,33 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return response()->json(['name' => Auth::user()->email], 200);
+            return response()->json([
+                    'name' => Auth::user()->name,
+                    'email' => Auth::user()->email
+
+                ], 200);
         }
 
         throw new Exception('ログインに失敗しました。再度お試しください');
     }
+
+    //  /**
+    //  * @param  Request  $request
+    //  * @return \Illuminate\Http\JsonResponse
+    //  */
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+    
+        return response()->json(true);
+    }
+
+    public function test(Request $request)
+    {
+      
+        return response()->json(true);
+    }
+
 }
