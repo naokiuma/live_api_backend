@@ -12,7 +12,7 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        // 'api/comments',
+        // 'api/comments', //ここに追加する？https://qiita.com/hikkappi/items/1b51b9e58e8e391762de
         //
     ];
 }

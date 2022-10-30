@@ -37,21 +37,11 @@ Route::middleware('auth:sanctum')->get('/user',function(Request $request){
 Route::post('/login', 'App\Http\Controllers\Auth\LoginController@login');
 Route::post('/logout', 'App\Http\Controllers\Auth\LoginController@logout');
 
-
-
-
-
 // Route::post('/login', [LoginController::class, 'login']);
 
-
-
-//画像ファイルアップロードボタン(仮)
-Route::get('/upload/image','App\Http\Controllers\ImageController@input');
-//画像ファイルアップロード先
-Route::post('/upload/image','App\Http\Controllers\ImageController@upload');
-
-
-
-Auth::routes();
+Route::get('/upload/image','App\Http\Controllers\ImageController@input');//画像ファイルアップロードボタン(仮)
+Route::post('/upload/image','App\Http\Controllers\ImageController@upload');//画像ファイルアップロード先
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Auth::routes();
+
