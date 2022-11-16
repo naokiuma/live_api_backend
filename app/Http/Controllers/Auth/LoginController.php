@@ -80,6 +80,7 @@ class LoginController extends Controller
     public function test(Request $request)
     {
       
+        dd('到達');
         return response()->json(true);
     }
 
