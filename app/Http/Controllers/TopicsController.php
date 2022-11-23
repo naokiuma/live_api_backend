@@ -40,9 +40,6 @@ class TopicsController extends Controller
      * 新しいトピックを投稿
      */
     public function createTopics(Request $request) {
-
-
-
         Log::debug("debug post内容!");
         Log::debug($request->all());
 
@@ -52,10 +49,6 @@ class TopicsController extends Controller
         // Log::debug($request->all());
         // $file = $_FILES['file'];
         // Log::debug(        );
-
-
-
-        
 
 
         // // request()->all()
@@ -72,20 +65,14 @@ class TopicsController extends Controller
 
         
 
-
-
-
-
         $topic = new Topic();
         // $path = Storage::disk("public")->putFile('file', $image);
         // $imagePath = "/storage/$path";
 
+        //https://qiita.com/mashirou_yuguchi/items/14d3614173c114c30f02
         $image_path = $request->file('file')->store('public/avatar/');
         Log::debug('画像です');
-
         Log::debug($image_path);
-
-
             // 保存したデータを$modelに格納
             // $topic->create([
             //     'title' => $request->title,

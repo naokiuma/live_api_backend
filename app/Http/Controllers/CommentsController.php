@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use DB;
 use Illuminate\Http\Request;
 use App\Models\Comment;
+use Illuminate\Support\Facades\Log;
+
 
 class CommentsController extends Controller
 {
@@ -21,6 +23,24 @@ class CommentsController extends Controller
         return response()->json($comments);
         //return response($comments, 200);
 
+    }
+
+    /**
+     * 新しいコメントを作成
+     */
+    public function createTopics(Request $request) {
+        Log::debug("debug post内容!");
+        Log::debug($request->all());
+
+        $comment = new Comment();      
+        // 保存したデータを$modelに格納
+        $comment->create([
+            'topic_id' => $request->topic_id,
+            'user_id' => $request->user_id,
+            'text' => $request->text,
+        ]);
+
+        return response()->json(true);
     }
 
 }
