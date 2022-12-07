@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Topic extends Model
 {
     use HasFactory;
-    protected $fillable = ['title','body','status'];//保存できるカラム
+    protected $fillable = ['title','body','status','image_path'];//保存できるカラム
 
 }

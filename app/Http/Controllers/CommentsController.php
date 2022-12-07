@@ -28,16 +28,17 @@ class CommentsController extends Controller
     /**
      * 新しいコメントを作成
      */
-    public function createTopics(Request $request) {
-        Log::debug("debug post内容!");
+    public function createComment(Request $request) {
+        Log::debug("debug creatのpost内容!");
         Log::debug($request->all());
 
         $comment = new Comment();      
         // 保存したデータを$modelに格納
         $comment->create([
             'topic_id' => $request->topic_id,
-            'user_id' => $request->user_id,
+            // 'name' => $request->name,
             'text' => $request->text,
+            'user_id' => $request->user_id,
         ]);
 
         return response()->json(true);

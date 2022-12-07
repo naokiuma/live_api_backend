@@ -29,6 +29,8 @@ Route::post('topics/create','App\Http\Controllers\TopicsController@createTopics'
 //コメント
 // Route::get('comments','App\Http\Controllers\CommentsController@getComments');
 Route::get('comments/{topic_id?}','App\Http\Controllers\CommentsController@getComments');
+Route::post('comments/create','App\Http\Controllers\CommentsController@createComment');
+
 
 
 Route::post('login', 'App\Http\Controllers\Auth\LoginController@login');
