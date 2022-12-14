@@ -40,73 +40,23 @@ class TopicsController extends Controller
      * 新しいトピックを投稿
      */
     public function createTopics(Request $request) {
-        Log::debug("debug post内容!");
-        Log::debug($request->all());
-
-        // Log::debug($request->file());
-        // Log::debug("debug post内容2!");
-
+        // Log::debug("debug post内容!");
         // Log::debug($request->all());
-        // $file = $_FILES['file'];
-        // Log::debug(        );
-
-
-        // // request()->all()
-        // $item_image_path = $request->file();
-        // $file = $request->file('file_name');
-        // $file = $request->file_name;
-
-        // Log::debug('イメージパスです');
-        // Log::debug($item_image_path);
-
-        // if ($request->hasFile('file')) {
-            
-        // }
-
-        
-
-        
-
         $topic = new Topic();
-        // $path = Storage::disk("public")->putFile('file', $image);
-        // $imagePath = "/storage/$path";
-
+        $result = $topic->create([
+            'title' => $request->title,
+            'body' => $request->body,
+            'status' => $request->status,
+        ]);
+        
         //https://qiita.com/mashirou_yuguchi/items/14d3614173c114c30f02
+        //画像があればテーブルに追加
         if(!is_null($request['file'])){
-            Log::debug('あり');
-
-            $image_path = $request->file('file')->store('public/avatar');
-            Log::debug($image_path);
-        }else{
-            Log::debug('なし');
-
-            $image_path = null;
+            $insert_id = $result->id;
+            $image_path = $request->file('file')->store('public/topics/' . $insert_id . '/');
+            Topic::where('id', $insert_id)
+                ->update(['image_path' => $image_path]);
         }
-        
-            // 保存したデータを$modelに格納//デフォルト
-            // $topic->create([
-            //     'title' => $request->title,
-            //     'body' => $request->body,
-            //     'status' => $request->status,
-            // ]);
-
-        //    dd($model->title); // "testname"
-        //    dd('到達した');
-        //    return true;
-        // dump('到達');
-        return response()->json(
-            $topic->create([
-                'title' => $request->title,
-                'body' => $request->body,
-                'status' => $request->status,
-                'image_path' => $image_path,
-
-            ])
-        );
-        
     }
-
-
-
 
 }
