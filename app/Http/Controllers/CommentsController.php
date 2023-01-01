@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use DB;
 use Illuminate\Http\Request;
 use App\Models\Comment;
+use App\Models\Comment_image;
+
 use Illuminate\Support\Facades\Log;
 
 
@@ -21,7 +23,6 @@ class CommentsController extends Controller
         // $comments = Comment::where('topic_id', $topic_id)->get();
         // dd(DB::getQueryLog());
         return response()->json($comments);
-        //return response($comments, 200);
 
     }
 
@@ -34,12 +35,30 @@ class CommentsController extends Controller
 
         $comment = new Comment();      
         // 保存したデータを$modelに格納
-        $comment->create([
+        $result = $comment->create([
             'topic_id' => $request->topic_id,
-            // 'name' => $request->name,
+            'name' => $request->name,
             'text' => $request->text,
             'user_id' => $request->user_id,
         ]);
+
+        //https://qiita.com/mashirou_yuguchi/items/14d3614173c114c30f02
+        //画像があればテーブルに追加
+        if(!is_null($request['file'])){
+            Log::debug('ここきた？');
+
+            $insert_id = $result->id;
+            $image_path = $request->file('file')->store('public/comment/' . $insert_id . '/');
+
+            Log::debug($image_path);
+
+
+            $comment_imae = new Comment_image();
+            $comment_imae->create([
+                'comment_id' => $insert_id,
+                'image_file_name' => $image_path,
+            ]);
+        }
 
         return response()->json(true);
     }
