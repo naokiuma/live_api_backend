@@ -19,9 +19,6 @@ class CommentsController extends Controller
         }else{
             $comments = Comment::get();
         }
-        // DB::enableQueryLog();
-        // $comments = Comment::where('topic_id', $topic_id)->get();
-        // dd(DB::getQueryLog());
         return response()->json($comments);
 
     }
@@ -30,8 +27,8 @@ class CommentsController extends Controller
      * 新しいコメントを作成
      */
     public function createComment(Request $request) {
-        Log::debug("debug creatのpost内容!");
-        Log::debug($request->all());
+        // Log::debug("debug creatのpost内容!");
+        // Log::debug($request->all());
 
         $comment = new Comment();      
         // 保存したデータを$modelに格納
@@ -45,8 +42,6 @@ class CommentsController extends Controller
         //https://qiita.com/mashirou_yuguchi/items/14d3614173c114c30f02
         //画像があればテーブルに追加
         if(!is_null($request['file'])){
-            Log::debug('ここきた？');
-
             $insert_id = $result->id;
             $image_path = $request->file('file')->store('public/comment/' . $insert_id . '/');
 
