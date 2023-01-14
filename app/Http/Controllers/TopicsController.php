@@ -14,14 +14,29 @@ class TopicsController extends Controller
 
     public function getTopics($topic_id = null) {
         if(isset($topic_id)){
-            $topics = Topic::where('id', $topic_id)->get();
+            $topics = Topic::where('id', $topic_id)->get();            
         }else{
+            Log::debug("debug ログ!!B");
             $topics = Topic::get();
+            // DB::enableQueryLog();//中身を確認開始
+
+            //タグを追加
+            foreach($topics as $topic){
+
+                Log::debug('ループの情報');
+                $target = $topic->id;//一旦変数に詰め込む必要がある
+                $temp = DB::table('topic_categories')
+                    ->select('name','color')
+                    ->leftJoin('categories', 'categories_id', '=', 'categories.category_id')
+                    ->where('topic_categories.topics_id',$target)
+                    ->get();
+
+                $topic['tags'] = [];
+                $topic['tags'] = $temp;
+    
+            }
+            // dd(DB::getQueryLog());//中身を確認
         }
-
-        // Log::debug("debug ログ!");
-        // Log::debug($topics);
-
 
         return response()->json($topics);
 
@@ -40,8 +55,8 @@ class TopicsController extends Controller
      * 新しいトピックを投稿
      */
     public function createTopics(Request $request) {
-        // Log::debug("debug post内容!");
-        // Log::debug($request->all());
+        Log::debug("debug post内容!");
+        Log::debug($request->all());
         $topic = new Topic();
         $result = $topic->create([
             'title' => $request->title,

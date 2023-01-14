@@ -12,13 +12,28 @@ use Illuminate\Support\Facades\Log;
 
 class CommentsController extends Controller
 {
+
+    /*
+    コメントを取得
+     */
     public function getComments($topic_id = null) {
         // logic to get all students goes here
+        // DB::enableQueryLog();//中身を確認開始
+
         if(isset($topic_id)){
-            $comments = Comment::where('topic_id', $topic_id)->get();
+            // $comments = Comment::where('topic_id', $topic_id);
+            $comments = Comment::leftJoin('comment_images', 'comments.comment_id', '=', 'comment_images.comment_id')
+                                ->where('topic_id', $topic_id)->orderByDesc('topic_id')
+                                ->get();
+                    
         }else{
-            $comments = Comment::get();
+            $comments = Comment::leftJoin('comment_images', 'comments.comment_id', '=', 'comment_images.comment_id')
+                                ->get();
+
         }
+        // dd(DB::getQueryLog());//中身を確認
+
+
         return response()->json($comments);
 
     }

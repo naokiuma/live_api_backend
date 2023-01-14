@@ -24,7 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 //トピック
-Route::get('topics','App\Http\Controllers\TopicsController@getTopics');
+Route::get('topics/{id?}','App\Http\Controllers\TopicsController@getTopics');
 Route::post('topics/create','App\Http\Controllers\TopicsController@createTopics');
 
 //コメント
