@@ -32,6 +32,9 @@ Route::post('topics/create','App\Http\Controllers\TopicsController@createTopics'
 Route::get('comments/{topic_id?}','App\Http\Controllers\CommentsController@getComments');
 Route::post('comments/create','App\Http\Controllers\CommentsController@createComment');
 
+//カテゴリー
+Route::get('categories/','App\Http\Controllers\CategoryController@getCategories');
+
 
 
 // 会員登録
