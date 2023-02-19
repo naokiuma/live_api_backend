@@ -25,7 +25,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 //トピック
 Route::get('topics/{id?}','App\Http\Controllers\TopicsController@getTopics');
-Route::post('topics/create','App\Http\Controllers\TopicsController@createTopics');
+Route::post('topics/create','App\Http\Controllers\TopicsController@create');
+
+Route::get('game/search','App\Http\Controllers\GameController@Search');
+// http://localhost:8888/api/game/search?game=%E3%82%BC%E3%83%AB%E3%83%80
+
+
 
 //コメント
 // Route::get('comments','App\Http\Controllers\CommentsController@getComments');
