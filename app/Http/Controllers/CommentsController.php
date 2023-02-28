@@ -23,12 +23,12 @@ class CommentsController extends Controller
         if(isset($topic_id)){
             // $comments = Comment::where('topic_id', $topic_id);
             $comments = Comment::leftJoin('comment_images', 'comments.comment_id', '=', 'comment_images.comment_id')
-                                ->where('topic_id', $topic_id)->orderByDesc('topic_id')
-                                ->get();
+                ->where('topic_id', $topic_id)->orderByDesc('topic_id')
+                ->get();
                     
         }else{
             $comments = Comment::leftJoin('comment_images', 'comments.comment_id', '=', 'comment_images.comment_id')
-                                ->get();
+                ->get();
 
         }
         // dd(DB::getQueryLog());//中身を確認

@@ -13,8 +13,13 @@ class GameController extends Controller
             // $game = Topic::where('game_title', $game_name)->get();    
             $search_word = $request->query('game'); 
             Log::debug("ゲームを探す");
-            
-            $games = Game::where('game_name', 'LIKE', '%'.$search_word.'%')->get();
+            Log::debug($search_word);
+
+            // todo search_wordがない場合のifを追加
+            $games = Game::where('game_name', 'LIKE', '%'.$this->escape_like($search_word).'%');
+            $games = $games->get();
+            // $users = User::where('name', 'LIKE', '%'.$keyword.'%');
+            // $users = User::where("name", "LIKE", "Bob%");  
             // ->leftJoin('topics', 'games.id', '=', 'topics.game_id')
             // ->get();
 
@@ -49,5 +54,17 @@ class GameController extends Controller
        
             return response()->json($games);
         }
+
+        function escape_like(string $value, string $char = '\\')
+        {
+            return str_replace(
+                    [$char, '%', '_'],
+                    [$char.$char, $char.'%', $char.'_'],
+                    $value
+            );
+        }
+
 }
+
+
 
