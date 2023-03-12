@@ -22,13 +22,16 @@ class CommentsController extends Controller
 
         if(isset($topic_id)){
             // $comments = Comment::where('topic_id', $topic_id);
-            $comments = Comment::leftJoin('comment_images', 'comments.comment_id', '=', 'comment_images.comment_id')
-                ->where('topic_id', $topic_id)->orderByDesc('topic_id')
-                ->get();
+            // $comments = Comment::leftJoin('comment_images', 'comments.comment_id', '=', 'comment_images.comment_id')
+            //     ->where('topic_id', $topic_id)->orderByDesc('topic_id')
+            //     ->get();
+            $comments = Comment::where('topic_id', $topic_id)->get();
+                // $games = $games->get();
                     
         }else{
-            $comments = Comment::leftJoin('comment_images', 'comments.comment_id', '=', 'comment_images.comment_id')
-                ->get();
+            // $comments = Comment::orderBy("comment_id")->get();
+            // $comments = Comment::leftJoin('comment_images', 'comments.comment_id', '=', 'comment_images.comment_id')
+                
 
         }
         // dd(DB::getQueryLog());//中身を確認

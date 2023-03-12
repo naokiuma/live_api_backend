@@ -5,64 +5,80 @@ namespace App\Http\Controllers;
 use DB;
 use Illuminate\Http\Request;
 use App\Models\Game;
+use App\Models\Game_image;
+
 use Illuminate\Support\Facades\Log;
 
 class GameController extends Controller
 {
     public function Search(Request $request) {
-            // $game = Topic::where('game_title', $game_name)->get();    
-            $search_word = $request->query('game'); 
-            Log::debug("ゲームを探す");
+            if(null === $request->input('game')){
+                return response()->json([]);
+            }
+            
+            $search_word = $request->input('game');
             Log::debug($search_word);
-
-            // todo search_wordがない場合のifを追加
             $games = Game::where('game_name', 'LIKE', '%'.$this->escape_like($search_word).'%');
             $games = $games->get();
-            // $users = User::where('name', 'LIKE', '%'.$keyword.'%');
-            // $users = User::where("name", "LIKE", "Bob%");  
-            // ->leftJoin('topics', 'games.id', '=', 'topics.game_id')
-            // ->get();
 
 
             if(count($games) == 0){
-                Log::debug("ゲームは見つからず");
-                return 'ゲームが見つかりませんでした';
+                return response()->json([]);
             }else{
                 foreach($games as $_game){
-                    // Log::debug('ループの情報');
                     $target = $_game->id;//一旦変数に詰め込む必要がある
                     $temp = DB::table('topics')
                         ->select('*')
                         ->where('topics.game_id',$target)
                         ->get();
-                    
-                    $_game['topics'] = [];
+
                     $_game['topics']  = $temp;
-                    
                 }
+                Log::debug($games);
+                return response()->json($games);
             }
+            
+    }
 
-
-              
-
-            Log::debug($games);
-
-
+    // /**
+    //  * 新しいゲームを登録
+    //  */
+    public function create(Request $request) {
+        Log::debug("debug post内容!");
+        Log::debug($request->all());
+        $game = new Game();
+        $result = $game->create([
+            'game_name' => $request->title,
+            'genres' => $request->body,
+            'status' => $request->status,
+        ]);
         
+        //https://qiita.com/mashirou_yuguchi/items/14d3614173c114c30f02
+        //画像があればテーブルに追加
+        if(!is_null($request['file'])){
+            $insert_id = $result->id;
+            $image_path = $request->file('file')->store('public/game/' . $insert_id . '/');
 
-
-       
-            return response()->json($games);
+            $gameImage = new Game_image();
+            $game_result = $gameImage->create([
+                'game_id' => $insert_id,
+                'image_file_name' => $image_path
+            ]);
         }
 
-        function escape_like(string $value, string $char = '\\')
-        {
-            return str_replace(
-                    [$char, '%', '_'],
-                    [$char.$char, $char.'%', $char.'_'],
-                    $value
-            );
-        }
+        return response()->json($result);
+    }
+
+
+
+    function escape_like(string $value, string $char = '\\')
+    {
+        return str_replace(
+                [$char, '%', '_'],
+                [$char.$char, $char.'%', $char.'_'],
+                $value
+        );
+    }
 
 }
 

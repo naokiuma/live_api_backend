@@ -40,10 +40,8 @@ class TopicsController extends Controller
 
     public function getTopicsWithComments($topic_id) {
         $topics = Topic::Join('comments', 'topics.id', '=', 'comments.topic_id')
-        
             ->where('id', $topic_id)
             ->get();
-
         return response()->json($topics);
     }
 
@@ -68,6 +66,12 @@ class TopicsController extends Controller
             Topic::where('id', $insert_id)
                 ->update(['image_path' => $image_path]);
         }
+
+        Log::debug($result);
+
+
+
+        return response()->json($result);
     }
 
     /**
