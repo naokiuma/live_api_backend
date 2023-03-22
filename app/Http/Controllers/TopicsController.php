@@ -38,12 +38,15 @@ class TopicsController extends Controller
         return response()->json($topics);
     }
 
+
+    /*コメントと共に取得*/
     public function getTopicsWithComments($topic_id) {
         $topics = Topic::Join('comments', 'topics.id', '=', 'comments.topic_id')
             ->where('id', $topic_id)
             ->get();
         return response()->json($topics);
     }
+
 
     /**
      * 新しいトピックを投稿
@@ -53,6 +56,7 @@ class TopicsController extends Controller
         Log::debug($request->all());
         $topic = new Topic();
         $result = $topic->create([
+            'game_id' => $request->game_id,
             'title' => $request->title,
             'body' => $request->body,
             'status' => $request->status,
