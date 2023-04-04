@@ -14,10 +14,17 @@ class TopicsController extends Controller
         if(isset($topic_id)){
             $topics = Topic::where('id', $topic_id)->get();            
         }else{
-            Log::debug("debug ログ!!B");
-            $topics = Topic::get();
+            $topics = Topic::leftJoin('games','games.id', '=', 'topics.game_id')
+            ->limit(9)
+            ->get([
+                'topics.id','topics.parent_user_id','topics.game_id','topics.title','topics.body','topics.status','topics.image_path',
+                'games.game_name','games.genres','games.hard'
+            ]);
             // DB::enableQueryLog();//中身を確認開始
         }
+
+        // Log::debug('topicsです');
+        // Log::debug($topics);
 
         //タグを追加
         foreach($topics as $topic){
@@ -31,7 +38,6 @@ class TopicsController extends Controller
 
             $topic['tags'] = [];
             $topic['tags'] = $temp;
-
         }
         // dd(DB::getQueryLog());//中身を確認
 
