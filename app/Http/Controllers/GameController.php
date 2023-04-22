@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Log;
 class GameController extends Controller
 {
     public function Search(Request $request) {
-            if(null === $request->input('game')){
+            if($request->input('game') === null){
                 $games = Game::inRandomOrder()->take(3)->get();
 
                 // return response()->json([]);//もしゲームがない場合は全部出してもいいかも？
@@ -40,8 +40,6 @@ class GameController extends Controller
                     ->select('*')
                     ->where('game_images.game_id',$target_id)
                     ->get();
-    
-                // $_each_game['images'] = [];
                 $_each_game['images'] = $temp;
             }
 
@@ -54,6 +52,7 @@ class GameController extends Controller
                     $temp = DB::table('topics')
                         ->select('*')
                         ->where('topics.game_id',$target)
+                        ->limit(3)
                         ->get();
 
                     $_game['topics']  = $temp;
@@ -70,20 +69,12 @@ class GameController extends Controller
         Log::debug("debug post内容!");
         $data = $request->all();
         Log::debug($request->all());
-
-
-        
         $game = new Game();
         $result = $game->create([
             'game_name' => $request->game_name,
             'genres' => $request->genres,
             'hard' => 'Nintendo Switch',
         ]);
-
-
-
-
-
 
         //https://qiita.com/mashirou_yuguchi/items/14d3614173c114c30f02
         //画像があればテーブルに追加
@@ -98,8 +89,6 @@ class GameController extends Controller
                 // Log::debug($categories);
             }else if(strpos( $key, 'file' ) !== false){
                 //画像を追加
-                // $imgs[] = $_val;
-                // Log::debug($imgs);
                 $image_path = $_val->store('public/game/' . $insert_id . '/');
                 Log::debug($image_path);
 
@@ -120,15 +109,41 @@ class GameController extends Controller
      * 
      */
     public function getGame($game_id = null) {
-        // if(isset($game_id)){
-        $game = Game::where('id', $game_id)->get();            
-        // }
+        if(!is_null($game_id)){
+
+            Log::debug("debug getGameのデータ1");
+            Log::debug($game_id);
+
+            $game = Game::where('id', $game_id)->get();  
+            $temp = DB::table('game_images')
+                ->select('*')
+                ->where('game_images.game_id',$game_id)
+                ->get();
+            $game['images'] = $temp;  
+            return response()->json($game);
+
+        }else{
+   
+            $games = Game::inRandomOrder()->take(5)->get();
+            Log::debug("debug getGameのデータ2");
+            Log::debug($games);
+
+            foreach($games as $_game){
+                $target_id = $_game->id;
+                $temp = DB::table('game_images')
+                ->select('*')
+                ->where('game_images.game_id',$target_id)
+                ->get();
+
+                $_game['images']  = $temp;
+            }
+            
+            return response()->json($games);
+            
+        }
 
         //todo カテゴリーを追加
-        //todo 画像ーを追加
-
-       
-        return response()->json($game);
+        //todo 画像ーを追加       
     }
 
 
