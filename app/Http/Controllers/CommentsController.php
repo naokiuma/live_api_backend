@@ -57,23 +57,25 @@ class CommentsController extends Controller
             'user_id' => $request->user_id,
         ]);
 
+		$insert_id = $result->id;
         //https://qiita.com/mashirou_yuguchi/items/14d3614173c114c30f02
         //画像があればテーブルに追加
         if(!is_null($request['file'])){
-            $insert_id = $result->id;
             $image_path = $request->file('file')->store('public/comment/' . $insert_id . '/');
 
             Log::debug($image_path);
 
 
-            $comment_imae = new Comment_image();
-            $comment_imae->create([
+            $comment_image = new Comment_image();
+            $comment_image->create([
                 'comment_id' => $insert_id,
                 'image_file_name' => $image_path,
             ]);
         }
 
-        return response()->json(true);
+		$result['comment_id'] = $insert_id;
+
+        return response()->json($result);
     }
 
 }

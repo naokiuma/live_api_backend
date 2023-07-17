@@ -18,6 +18,7 @@ class GameController extends Controller
 {
     public function Search(Request $request) {
             if($request->input('game') === null){
+				//ランダムで3件取得
                 $games = Game::inRandomOrder()->take(3)->get();
 
                 // return response()->json([]);//もしゲームがない場合は全部出してもいいかも？
@@ -35,10 +36,10 @@ class GameController extends Controller
 
             foreach($games as $_each_game){
                 // Log::debug('ループの情報');
-                $target_id = $_each_game->id;//一旦変数に詰め込む必要がある
+                // $target_id = $_each_game->id;//一旦変数に詰め込む必要がある
                 $temp = DB::table('game_images')
                     ->select('*')
-                    ->where('game_images.game_id',$target_id)
+                    ->where('game_images.game_id',$_each_game->id)
                     ->get();
                 $_each_game['images'] = $temp;
             }
@@ -79,8 +80,10 @@ class GameController extends Controller
         //https://qiita.com/mashirou_yuguchi/items/14d3614173c114c30f02
         //画像があればテーブルに追加
         $insert_id = $result->id;
+		Log::debug('insert_idです');
+		Log::debug($insert_id);
+		
         // $categories = [];
-        // $imgs = [];
 
         foreach($data as $key => $_val){
             if(strpos( $key, 'category' ) !== false){
@@ -89,7 +92,8 @@ class GameController extends Controller
                 // Log::debug($categories);
             }else if(strpos( $key, 'file' ) !== false){
                 //画像を追加
-                $image_path = $_val->store('public/game/' . $insert_id . '/');
+                $image_path = $_val->store('public/game/' . $insert_id);
+                Log::debug('img_pathです');
                 Log::debug($image_path);
 
                 $gameImage = new Game_image();
@@ -106,12 +110,12 @@ class GameController extends Controller
 
 
     /**
-     * 
+     * idを指定しない場合はランダムで取得
      */
     public function getGame($game_id = null) {
         if(!is_null($game_id)){
 
-            Log::debug("debug getGameのデータ1");
+            Log::debug("debug getGame");
             Log::debug($game_id);
 
             $game = Game::where('id', $game_id)->get();  
@@ -121,13 +125,13 @@ class GameController extends Controller
                 ->get();
             $game['images'] = $temp;  
             return response()->json($game);
-
         }else{
    
             $games = Game::inRandomOrder()->take(5)->get();
             Log::debug("debug getGameのデータ2");
             Log::debug($games);
 
+			//todo foreachで回せばどっちのルートでも同じでは？
             foreach($games as $_game){
                 $target_id = $_game->id;
                 $temp = DB::table('game_images')
