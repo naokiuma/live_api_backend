@@ -19,17 +19,13 @@ class GameController extends Controller
     public function Search(Request $request) {
             if($request->input('game') === null){
 				//ランダムで3件取得
-                $games = Game::inRandomOrder()->take(3)->get();
+                $games = Game::orderByDesc('id')->get();
 
                 // return response()->json([]);//もしゲームがない場合は全部出してもいいかも？
             }else{   
                 $search_word = $request->input('game');
                 Log::debug($search_word);
                 
-                // $games = Game::select('games.*','game_images.*')
-                //     ->where('game_name', 'LIKE', '%'.$this->escape_like($search_word).'%')
-                //     ->leftJoin('game_images', 'games.id', '=', 'game_images.game_id')
-                //     ->get();
                 
                 $games = Game::where('game_name', 'LIKE', '%'.$this->escape_like($search_word).'%')->get();
             }
@@ -109,21 +105,74 @@ class GameController extends Controller
     }
 
 
+	/**
+	 * 改修中
+	 */
+	public function getGame2(Request $request) {
+        $data = $request->all();
+        Log::debug($request->all());
+
+
+
+        // if($game_id){
+
+        //     Log::debug("debug getGame");
+        //     Log::debug($game_id);
+
+        //     $game = Game::where('id', $game_id)->get();  
+        //     Log::debug($game);
+
+        //     $temp = DB::table('game_images')
+        //         ->select('*')
+        //         ->where('game_images.game_id',$game_id)
+        //         ->get();
+        //     $game['images'] = $temp;
+			
+        //     return response()->json($game);
+        // }else{
+   
+        //     $games = Game::inRandomOrder()->take(5)->get();
+        //     Log::debug("debug getGameのデータ2");
+        //     Log::debug($games);
+
+		// 	//todo foreachで回せばどっちのルートでも同じでは？
+        //     foreach($games as $_game){
+        //         $target_id = $_game->id;
+        //         $temp = DB::table('game_images')
+        //         ->select('*')
+        //         ->where('game_images.game_id',$target_id)
+        //         ->get();
+
+        //         $_game['images']  = $temp;
+        //     }
+            
+        //     return response()->json($games);
+            
+        // }
+
+        //todo カテゴリーを追加
+        //todo 画像ーを追加       
+    }
+
     /**
-     * idを指定しない場合はランダムで取得
+     * 各ゲームを取得
+	 * idを指定しない場合はランダムで取得
      */
     public function getGame($game_id = null) {
-        if(!is_null($game_id)){
+        if($game_id){
 
             Log::debug("debug getGame");
             Log::debug($game_id);
 
             $game = Game::where('id', $game_id)->get();  
+            Log::debug($game);
+
             $temp = DB::table('game_images')
                 ->select('*')
                 ->where('game_images.game_id',$game_id)
                 ->get();
-            $game['images'] = $temp;  
+            $game['images'] = $temp;
+			
             return response()->json($game);
         }else{
    

@@ -29,6 +29,8 @@ Route::post('topics/create','App\Http\Controllers\TopicsController@create');
 
 Route::get('game/search','App\Http\Controllers\GameController@Search');
 Route::get('game/{id?}','App\Http\Controllers\GameController@getGame');
+
+Route::post('game/get2','App\Http\Controllers\GameController@getGame2');
 Route::post('game/create','App\Http\Controllers\GameController@create');
 
 // http://localhost:8888/api/game/search?game=%E3%82%BC%E3%83%AB%E3%83%80

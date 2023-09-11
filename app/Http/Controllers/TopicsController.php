@@ -23,8 +23,6 @@ class TopicsController extends Controller
             // DB::enableQueryLog();//中身を確認開始
         }
 
-        // Log::debug('topicsです');
-        // Log::debug($topics);
 
         //タグを追加
         foreach($topics as $topic){
