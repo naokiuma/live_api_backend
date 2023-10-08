@@ -17,8 +17,16 @@ class TopicsController extends Controller
             $topics = Topic::leftJoin('games','games.id', '=', 'topics.game_id')
             ->limit(9)
             ->get([
-                'topics.id','topics.parent_user_id','topics.game_id','topics.title','topics.body','topics.status','topics.image_path',
-                'games.game_name','games.genres','games.hard'
+                'topics.id',
+				'topics.parent_user_id',
+				'topics.game_id',
+				'topics.title',
+				'topics.body',
+				'topics.status',
+				'topics.image_path',
+                'games.game_name',
+				'games.genres',
+				'games.hard'
             ]);
             // DB::enableQueryLog();//中身を確認開始
         }
@@ -43,6 +51,8 @@ class TopicsController extends Controller
     }
 
 
+
+
     /*コメントと共に取得*/
     public function getTopicsWithComments($topic_id) {
         $topics = Topic::Join('comments', 'topics.id', '=', 'comments.topic_id')
@@ -51,12 +61,14 @@ class TopicsController extends Controller
         return response()->json($topics);
     }
 
+	
+
 
     /**
      * 新しいトピックを投稿
      */
     public function create(Request $request) {
-        Log::debug("debug post内容!");
+        Log::debug("debug topic_create_post内容!");
         Log::debug($request->all());
         $topic = new Topic();
         $result = $topic->create([

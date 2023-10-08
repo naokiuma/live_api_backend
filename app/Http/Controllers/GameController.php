@@ -164,40 +164,68 @@ class GameController extends Controller
             Log::debug("debug getGame");
             Log::debug($game_id);
 
-            $game = Game::where('id', $game_id)->get();  
-            Log::debug($game);
+            $result = Game::where('id', $game_id)->get();  
+            Log::debug($result);
 
             $temp = DB::table('game_images')
                 ->select('*')
                 ->where('game_images.game_id',$game_id)
                 ->get();
-            $game['images'] = $temp;
+            $result['images'] = $temp;
 			
-            return response()->json($game);
+            return response()->json($result);
         }else{
    
-            $games = Game::inRandomOrder()->take(5)->get();
+            $result = Game::inRandomOrder()->take(5)->get();
             Log::debug("debug getGameのデータ2");
-            Log::debug($games);
+            Log::debug($result);
 
-			//todo foreachで回せばどっちのルートでも同じでは？
-            foreach($games as $_game){
-                $target_id = $_game->id;
+            foreach($result as $key => $val){
+                $target_id = $val->id;
                 $temp = DB::table('game_images')
                 ->select('*')
                 ->where('game_images.game_id',$target_id)
                 ->get();
 
-                $_game['images']  = $temp;
+                $result[$key]['images']  = $temp;
             }
             
-            return response()->json($games);
+            return response()->json($result);
             
         }
 
         //todo カテゴリーを追加
         //todo 画像ーを追加       
     }
+
+
+	/**
+	 * ゲームデータとtopicを取得
+	 * 詳細ページ用
+	 */
+	function getGame_with_topic($game_id){
+
+		$result = Game::where('id', $game_id)->get(); 
+
+		$temp = DB::table('topics')
+			->select('*')
+			->where('topics.game_id',$game_id)
+			->orderBy('created_at', 'desc')
+			->limit(5)
+			->get();
+		$result[0]['topics'] = $temp;
+
+		$temp = DB::table('game_images')
+			->select('*')
+			->where('game_images.game_id',$game_id)
+			->get();
+		$result[0]['images'] = $temp;
+		
+        
+
+		return response()->json($result);
+		
+	}
 
 
 

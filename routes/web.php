@@ -17,8 +17,6 @@ use Illuminate\Http\Request;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('sample/{id?}', 'App\Http\Controllers\SampleController@index');
-//Route::get('sample', 'SampleController@index');//この書き方じゃダメwになったよ
 
 //token発行ルート
 Route::get('test',function(){
