@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
@@ -55,6 +56,7 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             return response()->json([
+					'result' => true,
                     'user_id' => Auth::user()->id,
                     'name' => Auth::user()->name,
                     'email' => Auth::user()->email
@@ -62,25 +64,30 @@ class LoginController extends Controller
                 ], 200);
         }
 
-        throw new Exception('ログインに失敗しました。再度お試しください');
+		return response()->json([
+            []
+        ], 401);
+
+		// return response()->json([], 401);
+        // throw new Exception('ログインに失敗しました。メールアドレスストパスワードが正しいかご確認下さい。');
     }
 
-    //  /**
-    //  * @param  Request  $request
-    //  * @return \Illuminate\Http\JsonResponse
-    //  */
+
+     /**
+     * @param  Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-    
+		// Log::debug('logoutします。');
         return response()->json(true);
     }
 
     public function test(Request $request)
     {
-      
         dd('到達');
         return response()->json(true);
     }

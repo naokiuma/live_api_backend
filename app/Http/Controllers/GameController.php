@@ -17,18 +17,23 @@ use Illuminate\Support\Facades\Log;
 class GameController extends Controller
 {
     public function Search(Request $request) {
+			Log::debug("debug クエリかいし");
+			// クエリログを有効にする
+			DB::enableQueryLog();
+
             if($request->input('game') === null){
 				//ランダムで3件取得
                 $games = Game::orderByDesc('id')->get();
-
                 // return response()->json([]);//もしゲームがない場合は全部出してもいいかも？
             }else{   
                 $search_word = $request->input('game');
-                Log::debug($search_word);
-                
-                
+                Log::debug($search_word);   
                 $games = Game::where('game_name', 'LIKE', '%'.$this->escape_like($search_word).'%')->get();
             }
+			Log::debug("debug クエリ完了");
+			 // クエリログを取得して出力する
+			$queries = DB::getQueryLog();
+			Log::debug("クエリログ", $queries);
 
             foreach($games as $_each_game){
                 // Log::debug('ループの情報');

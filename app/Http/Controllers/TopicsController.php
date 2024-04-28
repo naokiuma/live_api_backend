@@ -10,24 +10,28 @@ use Illuminate\Support\Facades\Log;
 class TopicsController extends Controller
 {
 
-    public function getTopics($topic_id = null) {
+    public function getTopics(Request $request,$topic_id = null) {
         if(isset($topic_id)){
             $topics = Topic::where('id', $topic_id)->get();            
         }else{
+			$count = $request->input('count');
+			// Log::debug("debug カウント件数");
+        	// Log::debug($count);
             $topics = Topic::leftJoin('games','games.id', '=', 'topics.game_id')
-            ->limit(9)
-            ->get([
-                'topics.id',
-				'topics.parent_user_id',
-				'topics.game_id',
-				'topics.title',
-				'topics.body',
-				'topics.status',
-				'topics.image_path',
-                'games.game_name',
-				'games.genres',
-				'games.hard'
-            ]);
+            	->limit($count)
+				->orderBy('topics.created_at', 'desc')
+            	->get([
+					'topics.id',
+					'topics.parent_user_id',
+					'topics.game_id',
+					'topics.title',
+					'topics.body',
+					'topics.status',
+					'topics.image_path',
+					'games.game_name',
+					'games.genres',
+					'games.hard'
+				]);
             // DB::enableQueryLog();//中身を確認開始
         }
 
@@ -61,9 +65,9 @@ class TopicsController extends Controller
         return response()->json($topics);
     }
 
+
+
 	
-
-
     /**
      * 新しいトピックを投稿
      */
